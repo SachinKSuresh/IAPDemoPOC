@@ -10,6 +10,6 @@ import lombok.Data;
 public class StoragePlan extends IAPBaseEntity {
 
 	private String name;
-	private Long storageSize; // in bytes or GB
+	private Long storageSize; // in bytes 
 
 }

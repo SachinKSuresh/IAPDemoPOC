@@ -1,0 +1,157 @@
+Database Schema Documentation
+
+1. Overview
+* Database Name: IAPSubscriptionManagementDemo
+* Purpose: Manages users, subscription plans, subscription products, subscriptions, and transactions for an in-app purchase system.
+
+2. Entity Documentation
+
+IAPBaseEntity
+* Purpose: Base entity that contains common fields used across all entities.
+* Fields:
+    * id (Primary Key, Long): Auto-incremented unique identifier.
+    * createdAt (LocalDateTime, NOT NULL): Timestamp of entity creation.
+    * updatedAt (LocalDateTime): Timestamp of the last update.
+    * isActive (Boolean): Indicates if the entity is active.
+
+User
+* Purpose: Stores user information and login credentials.
+* Inheritance: Extends IAPBaseEntity.
+* Fields:
+    * email (String, NOT NULL, UNIQUE): User’s email, used as the unique identifier.
+    * userName (String): Username for display or login.
+    * lastLogin (LocalDateTime): Timestamp of the user’s last login.
+    * password (String, NOT NULL): User’s hashed password.
+    * role (String): Role of the user. 
+    
+-- Table: users
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    user_name VARCHAR(255),
+    last_login TIMESTAMP,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    is_active BOOLEAN
+);
+
+StoragePlan
+* Purpose: Defines storage plans available for subscription products.
+* Inheritance: Extends IAPBaseEntity.
+* Fields:
+    * name (String): Name of the storage plan.
+    * storageSize (Long): Size of storage in bytes.
+    
+-- Table: storage_plans
+CREATE TABLE storage_plans (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    storage_size BIGINT,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    is_active BOOLEAN
+);
+
+SubscriptionProduct
+* Purpose: Represents products available for subscriptions.
+* Inheritance: Extends IAPBaseEntity.
+* Fields:
+    * storagePlan (Foreign Key to StoragePlan): The associated storage plan.
+    * name (String): Name of the subscription product.
+    * duration (Integer): Duration of the subscription in days.
+    * price (Double): Price of the subscription.
+    * currency (String): Currency of the subscription price.
+    * appStoreProductId (String): Identifier for App Store integration.
+    * playStoreProductId (String): Identifier for Play Store integration.
+* Relationships:
+    * Many-to-One with StoragePlan (subscription products link to a storage plan).
+    
+-- Table: subscription_products
+CREATE TABLE subscription_products (
+    id BIGSERIAL PRIMARY KEY,
+    plan_id BIGINT REFERENCES storage_plans(id),
+    name VARCHAR(255),
+    duration INTEGER,
+    price FLOAT,
+    currency VARCHAR(10),
+    app_store_product_id VARCHAR(255),
+    play_store_product_id VARCHAR(255),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    is_active BOOLEAN
+);
+
+Subscription
+* Purpose: Records user subscriptions to products.
+* Inheritance: Extends IAPBaseEntity.
+* Fields:
+    * user (Foreign Key to User): The user who owns the subscription.
+    * subscriptionProduct (Foreign Key to SubscriptionProduct): The subscribed product.
+    * status (String): Subscription status (e.g., active, cancelled).
+    * startDate (LocalDateTime): Subscription start date.
+    * endDate (LocalDateTime): Subscription end date.
+    * autoRenew (Boolean): Whether the subscription auto-renews.
+    * ppiStorageId (String): Storage identifier related to the subscription.
+* Relationships:
+    * Many-to-One with User (users can have multiple subscriptions).
+    * Many-to-One with SubscriptionProduct (products may have multiple subscriptions).
+
+-- Table: subscriptions
+CREATE TABLE subscriptions (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
+    product_id BIGINT REFERENCES subscription_products(id),
+    status VARCHAR(255),
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    auto_renew BOOLEAN,
+    ppi_storage_id VARCHAR(255),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    is_active BOOLEAN
+);
+
+Transaction
+* Purpose: Logs user transactions related to subscriptions.
+* Inheritance: Extends IAPBaseEntity.
+* Fields:
+    * user (Foreign Key to User): The user associated with the transaction.
+    * subscription (Foreign Key to Subscription): The subscription associated with the transaction.
+    * amount (Double): The transaction amount.
+    * currency (String): Currency used for the transaction.
+    * status (String): Status of the transaction (e.g., successful, failed).
+    * paymentProvider (String): Provider used for payment processing.
+    * providerTransactionId (String): Identifier for the transaction from the provider.
+* Relationships:
+    * Many-to-One with User (users can have multiple transactions).
+    * Many-to-One with Subscription (a subscription can have multiple transactions).
+    
+-- Table: transactions
+CREATE TABLE transactions (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
+    subscription_id BIGINT REFERENCES subscriptions(id),
+    amount FLOAT,
+    currency VARCHAR(10),
+    status VARCHAR(255),
+    payment_provider VARCHAR(255),
+    provider_transaction_id VARCHAR(255),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    is_active BOOLEAN
+);
+
+    
+
+3. Relationships and Foreign Keys
+* User - Subscription: One-to-Many relationship; each user can have multiple subscriptions.
+* User - Transaction: One-to-Many relationship; each user can have multiple transactions.
+* SubscriptionProduct - StoragePlan: Many-to-One relationship; each subscription product is associated with one storage plan.
+* Subscription - SubscriptionProduct: Many-to-One relationship; each subscription is associated with one product.
+* Transaction - Subscription: Many-to-One relationship; each transaction is linked to one subscription.
+
+4. Indexes
+* User Table: Unique index on email.
+* Foreign Key Indexes: Indexes on foreign keys for user_id, subscription_id, product_id, plan_id.

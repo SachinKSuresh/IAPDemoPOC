@@ -21,7 +21,7 @@ public class Subscription extends IAPBaseEntity {
 	@JoinColumn(name = "product_id")
 	private SubscriptionProduct subscriptionProduct;
 
-	private String status; // e.g., active, expired, canceled
+	private String status; 
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 
