@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.IAPDemoPOC.Subscription.dtos.UserDTO;
@@ -15,6 +16,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+//    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAllUsers() {
@@ -32,8 +36,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-//        User user = convertToEntity(userDTO);
-        return userRepository.save(user);
+    	 user.setPassword(passwordEncoder.encode(user.getPassword()));
+         return userRepository.save(user);
     }
 
     @Override
@@ -41,7 +45,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setEmail(userDTO.getEmail());
-        user.setName(userDTO.getName());
+        user.setUserName(userDTO.getName());
         user.setLastLogin(userDTO.getLastLogin());
         return userRepository.save(user);
     }
@@ -50,6 +54,18 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByUserName(username)
+//            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//        return new org.springframework.security.core.userdetails.User(
+//            user.getUserName(),
+//            user.getPassword(),
+//            Collections.emptyList() // Add authorities if needed
+//        );
+//    }
 
    
 }

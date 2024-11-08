@@ -23,20 +23,17 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class User extends IAPBaseEntity {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long userId;
-
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	@Column(nullable = false, unique = true)
-	private String name;
+//	@Column(nullable = false, unique = true)
+	private String userName;
 
 	@Column(name = "last_login")
 	private LocalDateTime lastLogin;
 
-//  @Column(nullable = false)
-//  private String password;
-
+  @Column(nullable = false)
+  private String password;
+  
+  private String role;
 }

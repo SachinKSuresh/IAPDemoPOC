@@ -15,4 +15,6 @@ public interface UserService {
 	User updateUser(Long id, UserDTO user);
 
 	void deleteUser(Long id);
+	
+	//public UserDetails loadUserByUsername(String username);
 }

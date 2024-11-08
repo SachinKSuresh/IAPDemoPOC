@@ -23,7 +23,9 @@ public class SubscriptionCancelledHandler implements WebhookNotificationHandler 
     public void handle(WebhookNotification notification) {
         logger.info("Processing subscription cancellation: {}", notification.getId());
         ValidateSubscriptionNotifications.validateSubscriptionDTO(notification);
-        Subscription subscription = ValidateSubscriptionNotifications.validateSubscriptionID(notification.getSubscriptionDTO().getId());
+        Subscription subscription = subscriptionService.getSubscriptionById(notification.getSubscriptionDTO().getId());
+        
+        //Subscription subscription = ValidateSubscriptionNotifications.validateSubscriptionID(notification.getSubscriptionDTO().getId());
         subscription.setEndDate(LocalDateTime.now());
         subscription.setIsActive(false);
         subscriptionService.saveSubscription(subscription);

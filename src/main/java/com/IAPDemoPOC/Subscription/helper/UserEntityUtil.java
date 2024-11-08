@@ -13,7 +13,7 @@ public class UserEntityUtil {
 	        UserDTO dto = new UserDTO();
 	        dto.setId(user.getId());
 	        dto.setEmail(user.getEmail());
-	        dto.setName(user.getName());
+	        dto.setName(user.getUserName());
 	        dto.setLastLogin(user.getLastLogin());
 	        return dto;
 	    }
@@ -21,7 +21,7 @@ public class UserEntityUtil {
 	    public User convertToEntity(UserDTO dto) {
 	        User user = new User();
 	        user.setEmail(dto.getEmail());
-	        user.setName(dto.getName());
+	        user.setUserName(dto.getName());
 	        return user;
 	    }
 }
