@@ -16,12 +16,13 @@ public class SecurityConfig {
     }
 	
 //	@Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//    public SecurityFilterChain securityFilterChain1(HttpSecurity http) throws Exception {
 //        http
 //            .csrf().disable()
 //            .authorizeRequests()
 //                .requestMatchers("/auth/**").permitAll() 
-//                .anyRequest().authenticated() 
+//                .anyRequest().
+//                authenticated() 
 //            .and()
 //            .sessionManagement()
 //                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); 

@@ -100,10 +100,12 @@ public class AuthService {
 
             Jws<Claims> claims = parser.parseClaimsJws(token);
 
-            Date expiryAt = claims.getBody().getExpiration();
+//            Date expiryAt = claims.getBody().getExpiration();
             Long userId = claims.getBody().get("user_id", Long.class);
 
-            return !expiryAt.before(new Date());
+//            not using expirt as of now 
+//            return !expiryAt.before(new Date());
+            return true;
         } catch (Exception e) {
             // Any parsing or validation error means the token is invalid
             return false;
