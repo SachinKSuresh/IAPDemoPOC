@@ -100,12 +100,12 @@ public class AuthService {
 
             Jws<Claims> claims = parser.parseClaimsJws(token);
 
-//            Date expiryAt = claims.getBody().getExpiration();
+            Date expiryAt = claims.getBody().getExpiration();
             Long userId = claims.getBody().get("user_id", Long.class);
 
 //            not using expirt as of now 
-//            return !expiryAt.before(new Date());
-            return true;
+            return !expiryAt.before(new Date());
+//            return true;
         } catch (Exception e) {
             // Any parsing or validation error means the token is invalid
             return false;
@@ -119,14 +119,15 @@ public class AuthService {
         dataInJwt.put("email", email);
 
         Date currentDate = new Date();
-       // Calendar calendar = Calendar.getInstance();
-        //calendar.add(Calendar.HOUR, 24); 
-//        Date expirationDate = calendar.getTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, 24); 
+        Date expirationDate = calendar.getTime();
 
         String token = Jwts.builder()
                 .setClaims(dataInJwt)
                 .setIssuedAt(currentDate)
-                //.setExpiration(expirationDate) 
+                .setSubject(email)
+                .setExpiration(expirationDate) 
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
 

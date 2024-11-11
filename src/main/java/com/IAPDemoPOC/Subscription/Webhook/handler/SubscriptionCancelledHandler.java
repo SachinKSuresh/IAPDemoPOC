@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.IAPDemoPOC.Subscription.Webhook.WebhookNotification;
+import com.IAPDemoPOC.Subscription.Webhook.utility.TransactionEntityUtility;
 import com.IAPDemoPOC.Subscription.Webhook.utility.ValidateSubscriptionNotifications;
+import com.IAPDemoPOC.Subscription.dtos.SubscriptionDTO;
 import com.IAPDemoPOC.Subscription.models.Subscription;
 import com.IAPDemoPOC.Subscription.service.SubscriptionService;
+import com.IAPDemoPOC.Subscription.service.TransactionService;
 
 @Component
 public class SubscriptionCancelledHandler implements WebhookNotificationHandler {
@@ -19,6 +22,10 @@ public class SubscriptionCancelledHandler implements WebhookNotificationHandler 
     
     @Autowired
     private SubscriptionService subscriptionService;
+    
+    @Autowired
+	private TransactionService transactionService;
+    
     @Override
     public void handle(WebhookNotification notification) {
         logger.info("Processing subscription cancellation: {}", notification.getId());
@@ -29,5 +36,11 @@ public class SubscriptionCancelledHandler implements WebhookNotificationHandler 
         subscription.setEndDate(LocalDateTime.now());
         subscription.setIsActive(false);
         subscriptionService.saveSubscription(subscription);
+        
+        SubscriptionDTO subscriptionDTO  = notification.getSubscriptionDTO();
+        transactionService.saveTransaction(TransactionEntityUtility.convertToEntity(subscription.getUser(), subscription, subscriptionDTO.getStatus(),
+				subscriptionDTO.getAmount()==null ? 0 : subscriptionDTO.getAmount(), subscriptionDTO.getCurrency()==null ? "undifined" : subscriptionDTO.getCurrency()));
+
+        
     }
 }

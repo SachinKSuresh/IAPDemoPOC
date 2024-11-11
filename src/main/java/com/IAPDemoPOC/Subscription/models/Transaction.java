@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -22,7 +23,7 @@ public class Transaction extends IAPBaseEntity {
 	private Double amount;
 	private String currency;
 	private String status; // e.g., successful, failed
-	private String paymentProvider;
-	private String providerTransactionId;
+	private String paymentProvider; //optional for now
+	private String providerTransactionId;//optional for now
 
 }

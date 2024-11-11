@@ -29,19 +29,11 @@ public class IAPSubscriptionController {
 	@Autowired
 	private SubscriptionService subscriptionService;
 
-//	List<SubscriptionDTO> getAllSubscription();
-//	List<SubscriptionDTO> getAllUserSubscription();
-//	SubscriptionDTO getSubscriptionById(Long id);
-//	SubscriptionDTO createSubscription(SubscriptionDTO subscriptionDTO);
-//	SubscriptionDTO updateSubscription(Long id, SubscriptionDTO subscriptionDTO);
-//	void deleteSubscription(Long id);
-
 	@GetMapping
 	public List<SubscriptionDTO> getAllSubscription() {
 		return subscriptionService.getAllSubscription().stream().map(sub-> SubscriptionEntityUtility.convertToDTO(sub)).collect(Collectors.toList());
 	}
 
-	// userID to be take from token
 	@GetMapping("/{userId}")
 	public ResponseEntity<List<SubscriptionDTO>> getAllSubscription(@PathVariable Long userId) {
 		return ResponseEntity.ok(subscriptionService.getAllUserSubscription(userId).stream().map(sub-> SubscriptionEntityUtility.convertToDTO(sub)).collect(Collectors.toList()));
@@ -52,6 +44,13 @@ public class IAPSubscriptionController {
 		return ResponseEntity.ok(SubscriptionEntityUtility.convertToDTO(subscriptionService.getSubscriptionById(id)));
 	}
 
+	@GetMapping("/active")
+	public ResponseEntity<List<SubscriptionDTO>> getActiveSubscription() {
+		return ResponseEntity.ok(subscriptionService.getActiveSubscription().stream().map(sub-> SubscriptionEntityUtility.convertToDTO(sub)).collect(Collectors.toList()));
+	}
+	
+	
+	
 //	@PostMapping
 //	public ResponseEntity<SubscriptionDTO> createSubscription(SubscriptionDTO subscriptionDTO) {
 //		return ResponseEntity.status(201).body(subscriptionService.createSubscription(subscriptionDTO));

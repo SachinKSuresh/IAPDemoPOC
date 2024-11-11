@@ -15,4 +15,9 @@ public class SubscriptionDTO {
 	private LocalDateTime endDate;
 	private Boolean autoRenew;
 	private String token;
+	
+	private Double amount;
+	private String currency;
+	
+	
 }

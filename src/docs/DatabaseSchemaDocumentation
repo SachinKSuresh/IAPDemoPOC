@@ -144,13 +144,13 @@ CREATE TABLE transactions (
 );
 
     
-
 3. Relationships and Foreign Keys
 * User - Subscription: One-to-Many relationship; each user can have multiple subscriptions.
 * User - Transaction: One-to-Many relationship; each user can have multiple transactions.
 * SubscriptionProduct - StoragePlan: Many-to-One relationship; each subscription product is associated with one storage plan.
 * Subscription - SubscriptionProduct: Many-to-One relationship; each subscription is associated with one product.
 * Transaction - Subscription: Many-to-One relationship; each transaction is linked to one subscription.
+
 
 4. Indexes
 * User Table: Unique index on email.

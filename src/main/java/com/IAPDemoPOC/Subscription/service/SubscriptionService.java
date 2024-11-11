@@ -23,4 +23,6 @@ public interface SubscriptionService {
 
 	void deleteSubscription(Long id);
 
+	List<Subscription> getActiveSubscription();
+
 }
