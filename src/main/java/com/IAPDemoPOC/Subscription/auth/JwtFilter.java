@@ -43,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7); // Extract the token without "Bearer "
+            jwt = authorizationHeader.substring(7); 
             try {
             	Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
 //            	Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt).getBody();
